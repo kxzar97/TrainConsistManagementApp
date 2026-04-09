@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.LinkedList;
 
 public class TrainConsistManagementApp {
 
@@ -41,6 +42,22 @@ public class TrainConsistManagementApp {
 
         System.out.println("\nUnique Bogie IDs (duplicates automatically removed):");
         System.out.println(bogieIds);
+
+        LinkedList<String> orderedConsist = new LinkedList<>();
+
+        orderedConsist.add("Engine");
+        orderedConsist.add("Sleeper");
+        orderedConsist.add("AC");
+        orderedConsist.add("Cargo");
+        orderedConsist.add("Guard");
+
+        orderedConsist.add(2, "Pantry Car");
+
+        orderedConsist.removeFirst();
+        orderedConsist.removeLast();
+
+        System.out.println("\nFinal ordered train consist:");
+        System.out.println(orderedConsist);
 
         System.out.println("\nApplication ready for next use cases...");
     }
