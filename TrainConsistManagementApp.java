@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TrainConsistManagementApp {
 
@@ -28,6 +30,17 @@ public class TrainConsistManagementApp {
 
         System.out.println("\nFinal train consist:");
         System.out.println(trainConsist);
+
+        Set<String> bogieIds = new HashSet<>();
+
+        bogieIds.add("BG101");
+        bogieIds.add("BG102");
+        bogieIds.add("BG103");
+        bogieIds.add("BG101");
+        bogieIds.add("BG102");
+
+        System.out.println("\nUnique Bogie IDs (duplicates automatically removed):");
+        System.out.println(bogieIds);
 
         System.out.println("\nApplication ready for next use cases...");
     }
