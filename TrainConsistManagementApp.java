@@ -1,7 +1,9 @@
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-// Bogie class
+// Bogie class from previous use cases
 class Bogie {
     String name;
     int capacity;
@@ -20,110 +22,66 @@ class Bogie {
 public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
+        System.out.println("==========================================");
+        System.out.println("UC11 - Validate Train ID and Cargo Code");
+        System.out.println("==========================================");
 
-        System.out.println("=== Train Consist Management App ===");
+        Scanner scanner = new Scanner(System.in);
 
-        // UC1–UC2
-        List<String> trainConsist = new ArrayList<>();
-        trainConsist.add("Sleeper");
-        trainConsist.add("AC Chair");
-        trainConsist.add("First Class");
-        trainConsist.remove("AC Chair");
+        // --- NEW UC11 LOGIC: REGEX VALIDATION ---
 
-        System.out.println("\nFinal train consist:");
-        System.out.println(trainConsist);
+        // 1. Accept Input [cite: 24]
+        System.out.print("Enter Train ID (Format: TRN-1234): ");
+        String trainId = scanner.nextLine();
 
-        // UC3
-        Set<String> bogieIds = new HashSet<>();
-        bogieIds.add("BG101");
-        bogieIds.add("BG102");
-        bogieIds.add("BG101");
+        System.out.print("Enter Cargo Code (Format: PET-AB): ");
+        String cargoCode = scanner.nextLine();
 
-        System.out.println("\nUnique Bogie IDs:");
-        System.out.println(bogieIds);
+        // 2. Define Regex Rules [cite: 31, 38, 39]
+        String trainIdRegex = "TRN-\\d{4}";
+        String cargoCodeRegex = "PET-[A-Z]{2}";
 
-        // UC4
-        LinkedList<String> orderedConsist = new LinkedList<>();
-        orderedConsist.add("Engine");
-        orderedConsist.add("Sleeper");
-        orderedConsist.add("AC");
-        orderedConsist.add("Cargo");
-        orderedConsist.add("Guard");
+        // 3. Compile Patterns and Create Matchers [cite: 32, 33, 40, 41]
+        Pattern trainIdPattern = Pattern.compile(trainIdRegex);
+        Pattern cargoCodePattern = Pattern.compile(cargoCodeRegex);
+        Matcher trainIdMatcher = trainIdPattern.matcher(trainId);
+        Matcher cargoCodeMatcher = cargoCodePattern.matcher(cargoCode);
 
-        orderedConsist.add(2, "Pantry Car");
-        orderedConsist.removeFirst();
-        orderedConsist.removeLast();
+        // 4. Validate and Display Result [cite: 34, 42, 43]
+        boolean isTrainIdValid = trainIdMatcher.matches();
+        boolean isCargoCodeValid = cargoCodeMatcher.matches();
 
-        System.out.println("\nFinal ordered train consist:");
-        System.out.println(orderedConsist);
+        System.out.println("\nValidation Results:");
+        System.out.println("Train ID Valid: " + isTrainIdValid);
+        System.out.println("Cargo Code Valid: " + isCargoCodeValid);
 
-        // UC5
-        LinkedHashSet<String> formation = new LinkedHashSet<>();
-        formation.add("Engine");
-        formation.add("Sleeper");
-        formation.add("Cargo");
-        formation.add("Guard");
-        formation.add("Sleeper");
+        // --- PREVIOUS FUNCTIONS (Logic from your current code) ---
 
-        System.out.println("\nFinal train formation:");
-        System.out.println(formation);
+        if (isTrainIdValid && isCargoCodeValid) {
+            System.out.println("\nProcessing data for Train: " + trainId);
 
-        // UC6
-        Map<String, Integer> bogieCapacityMap = new HashMap<>();
-        bogieCapacityMap.put("Sleeper", 72);
-        bogieCapacityMap.put("AC Chair", 60);
-        bogieCapacityMap.put("First Class", 24);
+            // Re-introducing your existing Bogie Management logic
+            Map<String, Integer> bogieCapacityMap = new HashMap<>();
+            bogieCapacityMap.put("Sleeper", 72);
+            bogieCapacityMap.put("AC Chair", 60);
+            bogieCapacityMap.put("First Class", 24);
 
-        System.out.println("\nBogie Capacity Mapping:");
-        for (Map.Entry<String, Integer> entry : bogieCapacityMap.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
-        }
-
-        // UC7
-        List<Bogie> bogieList = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : bogieCapacityMap.entrySet()) {
-            bogieList.add(new Bogie(entry.getKey(), entry.getValue()));
-        }
-
-        bogieList.sort((a, b) -> b.capacity - a.capacity);
-
-        System.out.println("\nSorted Bogies (Descending Capacity):");
-        bogieList.forEach(System.out::println);
-
-        // UC8
-        List<Bogie> highCapacityBogies = bogieList.stream()
-                .filter(b -> b.capacity > 60)
-                .collect(Collectors.toList());
-
-        System.out.println("\nHigh Capacity Bogies (Capacity > 60):");
-        highCapacityBogies.forEach(System.out::println);
-
-        // UC9
-        Map<String, List<Bogie>> groupedBogies = bogieList.stream()
-                .collect(Collectors.groupingBy(b -> b.name));
-
-        System.out.println("\nGrouped Bogies by Type:");
-        for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
-            System.out.println("\nType: " + entry.getKey());
-            for (Bogie b : entry.getValue()) {
-                System.out.println("  " + b);
+            List<Bogie> bogieList = new ArrayList<>();
+            for (Map.Entry<String, Integer> entry : bogieCapacityMap.entrySet()) {
+                bogieList.add(new Bogie(entry.getKey(), entry.getValue()));
             }
+
+            // Calculate total capacity using Streams (from your previous code)
+            int totalCapacity = bogieList.stream()
+                    .map(b -> b.capacity)
+                    .reduce(0, Integer::sum);
+
+            System.out.println("Total Seating Capacity verified: " + totalCapacity);
+        } else {
+            System.out.println("\n[ERROR] Downstream processing failed due to invalid data format."); [cite: 16, 46]
         }
 
-        // ============================
-        // ✅ UC10: Total Capacity using reduce()
-        // ============================
-
-        int totalCapacity = bogieList.stream()
-                .map(b -> b.capacity)          // extract capacity
-                .reduce(0, Integer::sum);     // aggregate
-
-        System.out.println("\nTotal Seating Capacity of Train: " + totalCapacity);
-
-        // Original list unchanged
-        System.out.println("\nOriginal Bogie List (Unchanged):");
-        bogieList.forEach(System.out::println);
-
-        System.out.println("\nApplication ready for next use cases...");
+        System.out.println("\nUC11 validation completed...");
+        scanner.close();
     }
 }
