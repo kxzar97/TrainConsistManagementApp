@@ -1,6 +1,7 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
-// ✅ UC7: Custom Bogie class
+// Bogie class (UC7)
 class Bogie {
     String name;
     int capacity;
@@ -22,40 +23,27 @@ public class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // UC1–UC2: List operations
+        // UC1–UC2
         List<String> trainConsist = new ArrayList<>();
-        System.out.println("Train consist initialized.");
-        System.out.println("Initial bogie count: " + trainConsist.size());
-
         trainConsist.add("Sleeper");
         trainConsist.add("AC Chair");
         trainConsist.add("First Class");
 
-        System.out.println("\nAfter adding passenger bogies:");
-        System.out.println("Train consist: " + trainConsist);
-
         trainConsist.remove("AC Chair");
-
-        System.out.println("\nAfter removing AC Chair bogie:");
-        System.out.println("Train consist: " + trainConsist);
-
-        boolean exists = trainConsist.contains("Sleeper");
-        System.out.println("\nDoes Sleeper bogie exist? " + exists);
 
         System.out.println("\nFinal train consist:");
         System.out.println(trainConsist);
 
-        // UC3: HashSet
+        // UC3
         Set<String> bogieIds = new HashSet<>();
         bogieIds.add("BG101");
         bogieIds.add("BG102");
-        bogieIds.add("BG103");
         bogieIds.add("BG101");
 
         System.out.println("\nUnique Bogie IDs:");
         System.out.println(bogieIds);
 
-        // UC4: LinkedList
+        // UC4
         LinkedList<String> orderedConsist = new LinkedList<>();
         orderedConsist.add("Engine");
         orderedConsist.add("Sleeper");
@@ -70,7 +58,7 @@ public class TrainConsistManagementApp {
         System.out.println("\nFinal ordered train consist:");
         System.out.println(orderedConsist);
 
-        // UC5: LinkedHashSet
+        // UC5
         LinkedHashSet<String> formation = new LinkedHashSet<>();
         formation.add("Engine");
         formation.add("Sleeper");
@@ -81,7 +69,7 @@ public class TrainConsistManagementApp {
         System.out.println("\nFinal train formation:");
         System.out.println(formation);
 
-        // UC6: HashMap
+        // UC6
         Map<String, Integer> bogieCapacityMap = new HashMap<>();
         bogieCapacityMap.put("Sleeper", 72);
         bogieCapacityMap.put("AC Chair", 60);
@@ -92,35 +80,34 @@ public class TrainConsistManagementApp {
             System.out.println(entry.getKey() + " -> " + entry.getValue());
         }
 
-        // ============================
-        // ✅ UC7: Sorting using Comparator
-        // ============================
-
+        // UC7
         List<Bogie> bogieList = new ArrayList<>();
 
-        // Creating Bogie objects
-        bogieList.add(new Bogie("Sleeper", 72));
-        bogieList.add(new Bogie("AC Chair", 60));
-        bogieList.add(new Bogie("First Class", 24));
-
-        System.out.println("\nBefore Sorting:");
-        System.out.println(bogieList);
-
-        // Sorting by capacity (ascending)
-        bogieList.sort(Comparator.comparingInt(b -> b.capacity));
-
-        System.out.println("\nAfter Sorting by Capacity (Ascending):");
-        for (Bogie b : bogieList) {
-            System.out.println(b);
+        // Build from map (clean integration 🔥)
+        for (Map.Entry<String, Integer> entry : bogieCapacityMap.entrySet()) {
+            bogieList.add(new Bogie(entry.getKey(), entry.getValue()));
         }
 
-        // Optional: Descending sort (more realistic for planning)
+        // Sort descending
         bogieList.sort((a, b) -> b.capacity - a.capacity);
 
-        System.out.println("\nAfter Sorting by Capacity (Descending):");
-        for (Bogie b : bogieList) {
-            System.out.println(b);
-        }
+        System.out.println("\nSorted Bogies (Descending Capacity):");
+        bogieList.forEach(System.out::println);
+
+        // ============================
+        // ✅ UC8: Stream Filtering
+        // ============================
+
+        List<Bogie> highCapacityBogies = bogieList.stream()
+                .filter(b -> b.capacity > 60)   // core UC8 condition
+                .collect(Collectors.toList());
+
+        System.out.println("\nHigh Capacity Bogies (Capacity > 60):");
+        highCapacityBogies.forEach(System.out::println);
+
+        // Proof original list unchanged
+        System.out.println("\nOriginal Bogie List (Unchanged):");
+        bogieList.forEach(System.out::println);
 
         System.out.println("\nApplication ready for next use cases...");
     }
