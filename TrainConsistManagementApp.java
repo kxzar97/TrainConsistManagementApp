@@ -1,7 +1,7 @@
 import java.util.*;
 import java.util.stream.Collectors;
 
-// Bogie class (UC7)
+// Bogie class
 class Bogie {
     String name;
     int capacity;
@@ -28,7 +28,6 @@ public class TrainConsistManagementApp {
         trainConsist.add("Sleeper");
         trainConsist.add("AC Chair");
         trainConsist.add("First Class");
-
         trainConsist.remove("AC Chair");
 
         System.out.println("\nFinal train consist:");
@@ -80,10 +79,8 @@ public class TrainConsistManagementApp {
             System.out.println(entry.getKey() + " -> " + entry.getValue());
         }
 
-        // UC7
+        // UC7 (Build objects from map)
         List<Bogie> bogieList = new ArrayList<>();
-
-        // Build from map (clean integration 🔥)
         for (Map.Entry<String, Integer> entry : bogieCapacityMap.entrySet()) {
             bogieList.add(new Bogie(entry.getKey(), entry.getValue()));
         }
@@ -94,18 +91,31 @@ public class TrainConsistManagementApp {
         System.out.println("\nSorted Bogies (Descending Capacity):");
         bogieList.forEach(System.out::println);
 
-        // ============================
-        // ✅ UC8: Stream Filtering
-        // ============================
-
+        // UC8 (Filtering)
         List<Bogie> highCapacityBogies = bogieList.stream()
-                .filter(b -> b.capacity > 60)   // core UC8 condition
+                .filter(b -> b.capacity > 60)
                 .collect(Collectors.toList());
 
         System.out.println("\nHigh Capacity Bogies (Capacity > 60):");
         highCapacityBogies.forEach(System.out::println);
 
-        // Proof original list unchanged
+        // ============================
+        // ✅ UC9: Grouping Bogies
+        // ============================
+
+        Map<String, List<Bogie>> groupedBogies = bogieList.stream()
+                .collect(Collectors.groupingBy(b -> b.name));
+
+        System.out.println("\nGrouped Bogies by Type:");
+
+        for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
+            System.out.println("\nType: " + entry.getKey());
+            for (Bogie b : entry.getValue()) {
+                System.out.println("  " + b);
+            }
+        }
+
+        // Verify original list unchanged
         System.out.println("\nOriginal Bogie List (Unchanged):");
         bogieList.forEach(System.out::println);
 
