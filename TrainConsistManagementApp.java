@@ -79,19 +79,18 @@ public class TrainConsistManagementApp {
             System.out.println(entry.getKey() + " -> " + entry.getValue());
         }
 
-        // UC7 (Build objects from map)
+        // UC7
         List<Bogie> bogieList = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : bogieCapacityMap.entrySet()) {
             bogieList.add(new Bogie(entry.getKey(), entry.getValue()));
         }
 
-        // Sort descending
         bogieList.sort((a, b) -> b.capacity - a.capacity);
 
         System.out.println("\nSorted Bogies (Descending Capacity):");
         bogieList.forEach(System.out::println);
 
-        // UC8 (Filtering)
+        // UC8
         List<Bogie> highCapacityBogies = bogieList.stream()
                 .filter(b -> b.capacity > 60)
                 .collect(Collectors.toList());
@@ -99,15 +98,11 @@ public class TrainConsistManagementApp {
         System.out.println("\nHigh Capacity Bogies (Capacity > 60):");
         highCapacityBogies.forEach(System.out::println);
 
-        // ============================
-        // ✅ UC9: Grouping Bogies
-        // ============================
-
+        // UC9
         Map<String, List<Bogie>> groupedBogies = bogieList.stream()
                 .collect(Collectors.groupingBy(b -> b.name));
 
         System.out.println("\nGrouped Bogies by Type:");
-
         for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
             System.out.println("\nType: " + entry.getKey());
             for (Bogie b : entry.getValue()) {
@@ -115,7 +110,17 @@ public class TrainConsistManagementApp {
             }
         }
 
-        // Verify original list unchanged
+        // ============================
+        // ✅ UC10: Total Capacity using reduce()
+        // ============================
+
+        int totalCapacity = bogieList.stream()
+                .map(b -> b.capacity)          // extract capacity
+                .reduce(0, Integer::sum);     // aggregate
+
+        System.out.println("\nTotal Seating Capacity of Train: " + totalCapacity);
+
+        // Original list unchanged
         System.out.println("\nOriginal Bogie List (Unchanged):");
         bogieList.forEach(System.out::println);
 
